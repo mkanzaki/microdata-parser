@@ -1,6 +1,6 @@
 # PHP Microdata Parser and RDF extractor
 
-# Overview
+## Overview
 
 ARC2_MicrodataParser.php is an ARC2 module to parse microdata and extract RDF, according to "Microdata to RDF" W3C Note [1].
 
