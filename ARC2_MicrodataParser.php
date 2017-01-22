@@ -3,7 +3,7 @@
 <> a :PHPScript;
  :title "Microdata Parser/Extractor for ARC2";
  :created "2012-10-01";
- :release [:revision "0.74"; :created "2012-10-07"];
+ :release [:revision "0.75"; :created "2014-07-10"];
  :description """
  Extracts RDF graph from HTML with microdata annotation, according to "Microdata to RDF" spec (W3C Note).
  Make sure to place this file in ARC2's 'parsers' directory, and also have Microdata.php there. If redistribute this file, Microdata.php must be bundled.
@@ -23,6 +23,7 @@
  Caveat:
  - vocabulary entailment is patially implemented. See comment in proc_extra_triples()
  - lang tag is generated only in case the itemprop element has lang attribute, i.e. inherent language information is not considered.
+ - Microdata.php uses parse_url to resolve relative URIs. This function might have trouble with non-ascii 'word' id. (名前を勝手に変換しようとして文字化けする可能性あり)
  """ ;
  
  :seeAlso <http://www.w3.org/TR/microdata-rdf/> ;
@@ -504,39 +505,50 @@ class ARC2_MicrodataParser extends ARC2_BaseParser {
 	 */
 	function get_default_registry(){
 		return json_decode(
-			//JSON format registry at http://www.w3.org/ns/md as of 2012-10-06
+			//JSON format registry at http://www.w3.org/ns/md as of 2012-1201
+			//Content-Location: md.json
+			//Last-Modified: Sat, 01 Dec 2012 22:45:21 GMT
 			'{
   "http://schema.org/": {
     "propertyURI":    "vocabulary",
     "multipleValues": "unordered",
     "properties": {
-      "blogPosts"          : {"multipleValues": "list"},
-      "breadcrumb"         : {"multipleValues": "list"},
-      "byArtist"           : {"multipleValues": "list"},
-      "creator"            : {"multipleValues": "list"},
-      "episodes"           : {"multipleValues": "list"},
-      "events"             : {"multipleValues": "list"},
-      "founders"           : {"multipleValues": "list"},
-      "itemListElement"    : {"multipleValues": "list"},
-      "musicGroupMember"   : {"multipleValues": "list"},
-      "performerIn"        : {"multipleValues": "list"},
-      "performers"         : {"multipleValues": "list"},
-      "producer"           : {"multipleValues": "list"},
-      "recipeInstructions" : {"multipleValues": "list"},
-      "seasons"            : {"multipleValues": "list"},
-      "subEvents"          : {"multipleValues": "list"},
-      "tracks"             : {"multipleValues": "list"},
-      "additionalType"     : {"subPropertyOf" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"}
+      "additionalType": {"subPropertyOf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"},
+      "blogPosts": {"multipleValues": "list"},
+      "breadcrumb": {"multipleValues": "list"},
+      "byArtist": {"multipleValues": "list"},
+      "creator": {"multipleValues": "list"},
+      "episode": {"multipleValues": "list"},
+      "episodes": {"multipleValues": "list"},
+      "event": {"multipleValues": "list"},
+      "events": {"multipleValues": "list"},
+      "founder": {"multipleValues": "list"},
+      "founders": {"multipleValues": "list"},
+      "itemListElement": {"multipleValues": "list"},
+      "musicGroupMember": {"multipleValues": "list"},
+      "performerIn": {"multipleValues": "list"},
+      "actor": {"multipleValues": "list"},
+      "actors": {"multipleValues": "list"},
+      "performer": {"multipleValues": "list"},
+      "performers": {"multipleValues": "list"},
+      "producer": {"multipleValues": "list"},
+      "recipeInstructions": {"multipleValues": "list"},
+      "season": {"multipleValues": "list"},
+      "seasons": {"multipleValues": "list"},
+      "subEvent": {"multipleValues": "list"},
+      "subEvents": {"multipleValues": "list"},
+      "track": {"multipleValues": "list"},
+      "tracks": {"multipleValues": "list"}
     }
   },
   "http://microformats.org/profile/hcard": {
-    "propertyURI"    : "vocabulary",
-    "multipleValues" : "unordered"
+    "propertyURI":    "vocabulary",
+    "multipleValues": "unordered"
   },
   "http://microformats.org/profile/hcalendar#": {
-    "propertyURI"    : "vocabulary",
-    "multipleValues" : "unordered",
-    "properties"     : {
+    "propertyURI":    "vocabulary",
+    "multipleValues": "unordered",
+    "properties": {
       "categories": {"multipleValues": "list"}
     }
   }
